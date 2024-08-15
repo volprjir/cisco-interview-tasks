@@ -1,6 +1,7 @@
 class NodeAlreadyExistsError(Exception):
     pass
 
+
 class CycleInGraphError(Exception):
     pass
 

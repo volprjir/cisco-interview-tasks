@@ -1,6 +1,10 @@
 from typing import List, Set, Dict
 
-from graphs.exceptions import NodeAlreadyExistsError, CycleInGraphError, NodeNotFoundError
+from graphs.exceptions import (
+    NodeAlreadyExistsError,
+    CycleInGraphError,
+    NodeNotFoundError,
+)
 
 
 class GNode:
@@ -11,10 +15,10 @@ class GNode:
     def get_name(self) -> str:
         return self._name
 
-    def get_children(self) -> List['GNode']:
+    def get_children(self) -> List["GNode"]:
         return self._children
 
-    def add_child(self, child: 'GNode'):
+    def add_child(self, child: "GNode"):
         self._children.append(child)
 
     def __repr__(self):
@@ -28,9 +32,7 @@ class DAG:
         :param root: root node of the DAG.
         """
         self.root = root
-        self.nodes: Dict[str, GNode] = {
-            root.get_name(): root
-        }
+        self.nodes: Dict[str, GNode] = {root.get_name(): root}
 
     def add_node(self, name: str) -> GNode:
         """
@@ -39,7 +41,9 @@ class DAG:
         :return: GNode object that was added to the graph.
         """
         if name in self.nodes:
-            raise NodeAlreadyExistsError(f"Node with name {name} already exists in the DAG.")
+            raise NodeAlreadyExistsError(
+                f"Node with name {name} already exists in the DAG."
+            )
         new_node = GNode(name)
         self.nodes[name] = new_node
         return new_node
@@ -51,14 +55,18 @@ class DAG:
         :param to_node:  Target node name.
         """
         if from_node not in self.nodes or to_node not in self.nodes:
-            raise NodeNotFoundError("Both nodes must exist in the DAG before adding an edge.")
+            raise NodeNotFoundError(
+                "Both nodes must exist in the DAG before adding an edge."
+            )
 
         from_node_obj = self.nodes[from_node]
         to_node_obj = self.nodes[to_node]
 
         # Check for cycles
         if self._creates_cycle(from_node_obj, to_node_obj):
-            raise CycleInGraphError("Adding this edge would create a cycle, which is not allowed in a DAG.")
+            raise CycleInGraphError(
+                "Adding this edge would create a cycle, which is not allowed in a DAG."
+            )
 
         from_node_obj.add_child(to_node_obj)
 
@@ -72,7 +80,9 @@ class DAG:
         visited = set()
         return self._dfs_check_cycle(to_node, from_node.get_name(), visited)
 
-    def _dfs_check_cycle(self, node: GNode, target_name: str, visited: Set[str]) -> bool:
+    def _dfs_check_cycle(
+        self, node: GNode, target_name: str, visited: Set[str]
+    ) -> bool:
         """
         Perform a depth-first search (DFS) traversal of the graph starting from `node` to check if there is a path to
         :param node: node to start the traversal from.
@@ -115,6 +125,7 @@ class DAG:
         result = []
         dfs(self.root, visited, result)
         return result
+
     # -------------------------------------------------------------------------------------------------------------------
 
     # This is the part of the coding task for 1b -----------------------------------------------------------------------
@@ -124,7 +135,10 @@ class DAG:
         :return:
             List of GNodes, where each path is a list of nodes from the root to a leaf node.
         """
-        def dfs_paths(node: GNode, current_path: List[GNode], all_paths: List[List[GNode]]):
+
+        def dfs_paths(
+            node: GNode, current_path: List[GNode], all_paths: List[List[GNode]]
+        ):
             current_path.append(node)
 
             # If node has no children, it is a leaf node and a path is complete
@@ -141,5 +155,5 @@ class DAG:
         result = []
         dfs_paths(self.root, [], result)
         return result
-    # ------------------------------------------------------------------------------------------------------------------
 
+    # ------------------------------------------------------------------------------------------------------------------

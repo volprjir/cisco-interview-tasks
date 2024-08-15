@@ -1,7 +1,11 @@
 from graphs.graph import GNode, DAG
 import pytest
 
-from graphs.exceptions import CycleInGraphError, NodeAlreadyExistsError, NodeNotFoundError
+from graphs.exceptions import (
+    CycleInGraphError,
+    NodeAlreadyExistsError,
+    NodeNotFoundError,
+)
 
 
 def test_dag_paths():
@@ -26,7 +30,14 @@ def test_dag_paths():
     dag.add_edge("c", "h")
     dag.add_edge("d", "j")
 
-    assert dag.paths() == [[a, b, e], [a, b, f], [a, c, e], [a, c, g], [a, c, h], [a, d, j]]
+    assert dag.paths() == [
+        [a, b, e],
+        [a, b, f],
+        [a, c, e],
+        [a, c, g],
+        [a, c, h],
+        [a, d, j],
+    ]
 
 
 def test_dag_walk_through():
@@ -56,7 +67,10 @@ def test_create_cyclic_dag():
     dag.add_edge("a", "b")
     with pytest.raises(CycleInGraphError) as excinfo:
         dag.add_edge("b", "a")
-    assert "Adding this edge would create a cycle, which is not allowed in a DAG." in str(excinfo.value)
+    assert (
+        "Adding this edge would create a cycle, which is not allowed in a DAG."
+        in str(excinfo.value)
+    )
 
 
 def test_adding_existing_node():
@@ -72,4 +86,6 @@ def test_adding_edge_to_nonexistent_node():
     dag = DAG(a)
     with pytest.raises(NodeNotFoundError) as excinfo:
         dag.add_edge("a", "b")
-    assert "Both nodes must exist in the DAG before adding an edge." in str(excinfo.value)
+    assert "Both nodes must exist in the DAG before adding an edge." in str(
+        excinfo.value
+    )
